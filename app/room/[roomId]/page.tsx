@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useMediaStream } from '@/app/hooks/useMediaStream';
-import { useTrysteroRoom } from '@/app/hooks/useTrysteroRoom'; // ← изменен импорт
+import { useTrysteroRoom } from '@/app/hooks/useTrysteroRoom';
 import { useRoom } from '@/app/hooks/useRoom';
 import { ParticipantsGrid } from '@/app/components/conference/ParticipantsGrid';
 import { ConferenceControls } from '@/app/components/conference/ConferenceControls';
@@ -15,7 +15,6 @@ export default function RoomPage() {
 
   const { stream: localStream, isMuted, isVideoOff, toggleMute, toggleVideo, error: mediaError } = useMediaStream();
 
-  // Заменяем usePeerConnection на useTrysteroRoom
   const {
     participants,
     isCreator,

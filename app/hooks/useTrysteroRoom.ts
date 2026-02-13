@@ -15,7 +15,7 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
 
   useEffect(() => {
     if (!localStream) {
-      console.log('Waiting for local stream...');
+      // console.log('Waiting for local stream...');
       return;
     }
 
@@ -24,33 +24,33 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
 
     const initRoom = async () => {
       try {
-        // Создаем или присоединяемся к комнате
+        // create room and connect to it
         const room = createTrysteroRoom(roomId);
         roomRef.current = room;
 
-        // Получаем свой ID из Trystero
-        // selfId нужно импортировать динамически
+        // get id from trystero
         const { selfId } = await import('trystero');
 
         if (!mounted) return;
 
         setMyPeerId(selfId);
-        console.log('Connected to Trystero room with ID:', selfId);
+        // console.log('Connected to Trystero room with ID:', selfId);
 
-        // Отправляем свой видеопоток всем в комнате
+        // send stream to all participants
         room.addStream(localStream);
-        console.log('Local stream added to room');
+        // console.log('Local stream added to room');
 
-        // Слушаем новых участников
+        // listen to new participants
         room.onPeerJoin((peerId: string) => {
-          console.log('Peer joined:', peerId);
-          // Отправляем поток новому участнику
+          // console.log('Peer joined:', peerId);
+
+          // send stream to a new participant
           room.addStream(localStream, peerId);
         });
 
-        // Слушаем видеопотоки от других участников
+        // listen video-streams from other participants
         room.onPeerStream((stream: MediaStream, peerId: string) => {
-          console.log('Received stream from:', peerId);
+          // console.log('Received stream from:', peerId);
 
           if (!mounted) return;
 
@@ -68,9 +68,9 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
           streamsRef.current.set(peerId, stream);
         });
 
-        // Слушаем уход участников
+        // listen participants leave
         room.onPeerLeave((peerId: string) => {
-          console.log('Peer left:', peerId);
+          // console.log('Peer left:', peerId);
 
           setParticipants((prev) => {
             const newMap = new Map(prev);
@@ -82,7 +82,7 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
         });
 
         setConnectionStatus('connected');
-        console.log('Trystero room initialized successfully');
+        // console.log('Trystero room initialized successfully');
       } catch (error) {
         console.error('Failed to initialize Trystero room:', error);
         setConnectionStatus('disconnected');
@@ -91,18 +91,18 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
 
     initRoom();
 
-    // Cleanup при размонтировании
+    // Cleanup on unmount
     return () => {
       mounted = false;
       if (roomRef.current) {
-        console.log('Leaving room...');
+        // console.log('Leaving room...');
         roomRef.current.leave();
       }
     };
   }, [roomId, localStream]);
 
   const leaveRoom = useCallback(() => {
-    console.log('Leaving room...');
+    // console.log('Leaving room...');
     if (roomRef.current) {
       roomRef.current.leave();
     }
@@ -110,8 +110,7 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
     setConnectionStatus('disconnected');
   }, []);
 
-  // В Trystero первый вошедший автоматически становится создателем
-  // но это не так важно, как в PeerJS
+  // first participant becomes creator
   const isCreator = participants.size === 0 && connectionStatus === 'connected';
 
   return {
@@ -120,6 +119,6 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
     isCreator,
     connectionStatus,
     leaveRoom,
-    endConference: leaveRoom, // для совместимости
+    endConference: leaveRoom,
   };
 };
