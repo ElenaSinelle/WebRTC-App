@@ -3,21 +3,31 @@
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
-export const useRoom = () => {
+export const useRoom = (roomId: string) => {
   const router = useRouter();
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<'none' | 'link' | 'id'>('none');
   const [showEndConfirmation, setShowEndConfirmation] = useState(false);
 
   const copyRoomLink = useCallback(async () => {
     const link = window.location.href;
     try {
       await navigator.clipboard.writeText(link);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setCopied('link');
+      setTimeout(() => setCopied('none'), 2000);
     } catch (err) {
-      console.error('Failed to copy:', err);
+      console.error('Failed to copy link:', err);
     }
   }, []);
+
+  const copyRoomId = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(roomId);
+      setCopied('id');
+      setTimeout(() => setCopied('none'), 2000);
+    } catch (err) {
+      console.error('Failed to copy room ID:', err);
+    }
+  }, [roomId]);
 
   const leaveRoom = useCallback(() => {
     router.push('/');
@@ -34,6 +44,7 @@ export const useRoom = () => {
   return {
     copied,
     copyRoomLink,
+    copyRoomId,
     leaveRoom,
     showEndConfirmation,
     openEndConfirmation,
