@@ -27,6 +27,16 @@ export const useMobileDetect = () => {
     else if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) setBrowser('safari');
     else if (userAgent.includes('Edg')) setBrowser('edge');
     else if (userAgent.includes('Miui')) setBrowser('miui');
+
+    // additional info about iOS
+    if (ios) {
+      console.log(
+        'iOS version:',
+        userAgent.match(/OS (\d+)_(\d+)/)
+          ? `${userAgent.match(/OS (\d+)_(\d+)/)?.[1]}.${userAgent.match(/OS (\d+)_(\d+)/)?.[2]}`
+          : 'unknown',
+      );
+    }
   }, []);
 
   return { isMobile, isIOS, isAndroid, browser };

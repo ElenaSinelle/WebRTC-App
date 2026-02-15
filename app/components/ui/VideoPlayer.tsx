@@ -1,5 +1,6 @@
 'use client';
 
+import { useMobileDetect } from '@/app/hooks/useMobileDetect';
 import { useEffect, useRef } from 'react';
 
 interface VideoPlayerProps {
@@ -18,12 +19,27 @@ export const VideoPlayer = ({
   participantName = 'Participant',
 }: VideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { isIOS } = useMobileDetect();
 
   useEffect(() => {
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream;
+
+      // for iOS: force play
+      if (isIOS && !isLocal) {
+        const playVideo = () => {
+          if (videoRef.current) {
+            videoRef.current.play().catch((e) => {
+              console.log('iOS play error (will retry):', e);
+              // retry after error
+              setTimeout(playVideo, 500);
+            });
+          }
+        };
+        playVideo();
+      }
     }
-  }, [stream]);
+  }, [stream, isIOS, isLocal]);
 
   return (
     <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-900 shadow-xl border border-gray-200">

@@ -13,7 +13,7 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
 
   const roomRef = useRef<Room | null>(null);
   const streamsRef = useRef<Map<string, MediaStream>>(new Map());
-  const { browser, isAndroid } = useMobileDetect();
+  const { isAndroid, isIOS } = useMobileDetect();
 
   useEffect(() => {
     if (!localStream) {
@@ -41,22 +41,53 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
           setTimeout(() => {
             if (roomRef.current && localStream) {
               roomRef.current.addStream(localStream);
-              // console.log('Local stream added to room (Android delay)');
             }
           }, 300);
+        } else if (isIOS) {
+          console.log('iOS detected, applying special handling');
+
+          // enable audio-tracks
+          localStream.getAudioTracks().forEach((track) => {
+            track.enabled = true;
+          });
+
+          // settimeout for adding video for iOS
+          setTimeout(() => {
+            if (roomRef.current && localStream) {
+              roomRef.current.addStream(localStream);
+
+              //  invoke audio session for iOS
+              const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+              if (audioContext.state === 'suspended') {
+                audioContext.resume().then(() => {
+                  console.log('🍎 AudioContext resumed for iOS');
+                });
+              }
+            }
+          }, 100);
         } else {
+          // Desktop: сразу добавляем стрим
           room.addStream(localStream);
         }
 
         // send stream to all participants
-        room.addStream(localStream);
+        // room.addStream(localStream);
 
         // listen to new participants
         room.onPeerJoin((peerId: string) => {
-          // console.log('Peer joined:', peerId);
+          console.log('Peer joined:', peerId);
 
           // send stream to a new participant
-          room.addStream(localStream, peerId);
+          if (isIOS) {
+            // settimeout for sending to iOS
+            setTimeout(() => {
+              if (roomRef.current && localStream) {
+                roomRef.current.addStream(localStream, peerId);
+              }
+            }, 200);
+          } else {
+            room.addStream(localStream, peerId);
+          }
         });
 
         // listen video-streams from other participants
@@ -64,6 +95,13 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
           // console.log('Received stream from:', peerId);
 
           if (!mounted) return;
+
+          // activate audio for iOS
+          if (isIOS) {
+            stream.getAudioTracks().forEach((track) => {
+              track.enabled = true;
+            });
+          }
 
           setParticipants((prev) => {
             const newMap = new Map(prev);
@@ -106,7 +144,6 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
     return () => {
       mounted = false;
       if (roomRef.current) {
-        // console.log('Leaving room...');
         roomRef.current.leave();
       }
     };
