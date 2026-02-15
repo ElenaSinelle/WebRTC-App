@@ -1,43 +1,36 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 export const useMobileDetect = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
-  const [isAndroid, setIsAndroid] = useState(false);
-  const [browser, setBrowser] = useState('');
+  const deviceInfo = useMemo(() => {
+    if (typeof window === 'undefined') {
+      return { isMobile: false, isIOS: false, isAndroid: false, browser: '' };
+    }
 
-  useEffect(() => {
     const userAgent = navigator.userAgent;
-    const mobile =
+    const isMobile =
       /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
         userAgent,
       );
-    const ios = /iP(hone|od|ad)/.test(userAgent);
-    const android = /Android/.test(userAgent);
+    const isIOS = /iP(hone|od|ad)/.test(userAgent);
+    const isAndroid = /Android/.test(userAgent);
 
-    setIsMobile(mobile);
-    setIsIOS(ios);
-    setIsAndroid(android);
+    let browser = '';
+    if (userAgent.includes('Chrome')) browser = 'chrome';
+    else if (userAgent.includes('Firefox')) browser = 'firefox';
+    else if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) browser = 'safari';
+    else if (userAgent.includes('Edg')) browser = 'edge';
+    else if (userAgent.includes('Miui')) browser = 'miui';
 
-    // detect browser
-    if (userAgent.includes('Chrome')) setBrowser('chrome');
-    else if (userAgent.includes('Firefox')) setBrowser('firefox');
-    else if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) setBrowser('safari');
-    else if (userAgent.includes('Edg')) setBrowser('edge');
-    else if (userAgent.includes('Miui')) setBrowser('miui');
-
-    // additional info about iOS
-    if (ios) {
-      console.log(
-        'iOS version:',
-        userAgent.match(/OS (\d+)_(\d+)/)
-          ? `${userAgent.match(/OS (\d+)_(\d+)/)?.[1]}.${userAgent.match(/OS (\d+)_(\d+)/)?.[2]}`
-          : 'unknown',
-      );
+    if (isIOS) {
+      const match = userAgent.match(/OS (\d+)_(\d+)/);
+      const version = match ? `${match[1]}.${match[2]}` : 'unknown';
+      console.log('iOS version:', version);
     }
+
+    return { isMobile, isIOS, isAndroid, browser };
   }, []);
 
-  return { isMobile, isIOS, isAndroid, browser };
+  return deviceInfo;
 };

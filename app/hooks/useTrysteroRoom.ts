@@ -57,7 +57,9 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
               roomRef.current.addStream(localStream);
 
               //  invoke audio session for iOS
-              const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+              const audioContext = new (
+                window.AudioContext || (window as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+              )();
               if (audioContext.state === 'suspended') {
                 audioContext.resume().then(() => {
                   console.log('🍎 AudioContext resumed for iOS');
