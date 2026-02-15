@@ -36,8 +36,6 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
         if (!mounted) return;
 
         setMyPeerId(selfId);
-        console.log('Connected to Trystero room with ID:', selfId);
-        console.log('browser: ', browser);
 
         if (isAndroid) {
           // Timeout for initialisation on Android
@@ -55,12 +53,12 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
         room.addStream(localStream);
         // console.log('Local stream added to room');
 
-        if (roomRef.current) {
-          // invoking ICE-gathering
-          setTimeout(() => {
-            console.log('Forcing ICE candidate gathering...');
-          }, 500);
-        }
+        // if (roomRef.current) {
+        //   // invoking ICE-gathering
+        //   setTimeout(() => {
+        //     console.log('Forcing ICE candidate gathering...');
+        //   }, 500);
+        // }
 
         // listen to new participants
         room.onPeerJoin((peerId: string) => {
