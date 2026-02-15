@@ -17,7 +17,6 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
 
   useEffect(() => {
     if (!localStream) {
-      // console.log('Waiting for local stream...');
       return;
     }
 
@@ -38,11 +37,11 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
         setMyPeerId(selfId);
 
         if (isAndroid) {
-          // Timeout for initialisation on Android
+          // Timeout for initialization on Android
           setTimeout(() => {
             if (roomRef.current && localStream) {
               roomRef.current.addStream(localStream);
-              console.log('Local stream added to room (Android delay)');
+              // console.log('Local stream added to room (Android delay)');
             }
           }, 300);
         } else {
@@ -51,14 +50,6 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
 
         // send stream to all participants
         room.addStream(localStream);
-        // console.log('Local stream added to room');
-
-        // if (roomRef.current) {
-        //   // invoking ICE-gathering
-        //   setTimeout(() => {
-        //     console.log('Forcing ICE candidate gathering...');
-        //   }, 500);
-        // }
 
         // listen to new participants
         room.onPeerJoin((peerId: string) => {

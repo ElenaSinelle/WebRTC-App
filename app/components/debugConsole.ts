@@ -38,5 +38,5 @@ export const DebugConsole = () => {
     }
   }, []);
 
-  return null; // Этот компонент ничего не рендерит
+  return null;
 };
