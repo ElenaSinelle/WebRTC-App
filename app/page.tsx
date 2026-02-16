@@ -31,7 +31,7 @@ export default function HomePage() {
         <label htmlFor="roomId" className="text-sm font-400">
           Enter a conference with RoomID
         </label>
-        {/*  TODO: input component  */}
+
         <input
           id="roomId"
           type="text"

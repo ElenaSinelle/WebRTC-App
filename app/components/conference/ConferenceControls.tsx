@@ -11,7 +11,9 @@ interface ConferenceControlsProps {
   onCopyLink: () => void;
   onLeave: () => void;
   onEndConference: () => void;
-  copied: boolean;
+  copiedLink: boolean;
+  onCopyRoomId: () => void;
+  copiedId: boolean;
 }
 
 export const ConferenceControls = ({
@@ -23,7 +25,9 @@ export const ConferenceControls = ({
   onCopyLink,
   onLeave,
   onEndConference,
-  copied,
+  copiedLink,
+  onCopyRoomId,
+  copiedId,
 }: ConferenceControlsProps) => {
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -39,9 +43,15 @@ export const ConferenceControls = ({
 
       <div className="flex flex-wrap justify-center gap-4">
         <Button onClick={onCopyLink} variant="secondary">
-          {copied ? 'Copied!' : 'Copy room link'}
+          {copiedLink ? 'Link copied!' : 'Copy room link'}
         </Button>
 
+        <Button onClick={onCopyRoomId} variant="secondary">
+          {copiedId ? 'Room Id copied!' : 'Copy room ID'}
+        </Button>
+      </div>
+
+      <div className="flex flex-wrap justify-center gap-4">
         <Button onClick={onLeave} variant="secondary">
           Leave room
         </Button>

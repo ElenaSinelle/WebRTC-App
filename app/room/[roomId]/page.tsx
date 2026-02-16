@@ -60,14 +60,7 @@ export default function RoomPage() {
 
   return (
     <div className="w-full max-w-7xl mx-auto p-6 flex flex-col gap-6">
-      <RoomInfo
-        roomId={roomId}
-        isCreator={isCreator}
-        participantsCount={participants.size}
-        connectionStatus={connectionStatus}
-        onCopyRoomId={copyRoomId}
-        copied={copied === 'id'}
-      />
+      <RoomInfo isCreator={isCreator} participantsCount={participants.size} connectionStatus={connectionStatus} />
 
       <ParticipantsGrid
         localStream={localStream}
@@ -85,7 +78,9 @@ export default function RoomPage() {
         onCopyLink={copyRoomLink}
         onLeave={handleLeave}
         onEndConference={openEndConfirmation}
-        copied={copied === 'link'}
+        copiedLink={copied === 'link'}
+        onCopyRoomId={copyRoomId}
+        copiedId={copied === 'id'}
       />
 
       {showEndConfirmation && (
