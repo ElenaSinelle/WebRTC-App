@@ -9,10 +9,6 @@ export const TelegramRedirect = () => {
   // const { isAndroid, isIOS } = useMobileDetect();
   const { isTelegramWebView, isTelegramIOS, isTelegramAndroid, isTelegramDesktop } = useTelegramDetection();
 
-  useEffect(() => {
-    console.log('TelegramRedirect mounted, isTelegramWebView:', isTelegramWebView);
-  }, [isTelegramWebView]);
-
   const getInstructions = () => {
     if (isTelegramAndroid) {
       return {
@@ -78,25 +74,21 @@ export const TelegramRedirect = () => {
     if (isTelegramWebView) {
       console.log('Telegram WebView detected - forcing redirect');
 
-      // const timer = setTimeout(() => {
-      //   const shouldRedirect = window.confirm('Video calls do not work inside Telegram. Open in your browser?');
+      const timer = setTimeout(() => {
+        const shouldRedirect = window.confirm('Video calls do not work inside Telegram. Open in your browser?');
 
-      //   if (shouldRedirect) {
-      //     handleOpenInBrowser();
-      //   }
-      // }, 500);
+        if (shouldRedirect) {
+          handleOpenInBrowser();
+        }
+      }, 500);
 
-      // return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
     }
   }, [isTelegramWebView]);
 
-  if (!isTelegramWebView) {
-    console.log('Not Telegram WebView, redirect hidden');
-    return null;
-  }
-  const instructions = getInstructions();
+  if (!isTelegramWebView) return null;
 
-  console.log('Telegram WebView confirmed, showing redirect UI');
+  const instructions = getInstructions();
 
   return (
     <div className="fixed inset-0 bg-background-primary z-50 flex items-center justify-center p-4">

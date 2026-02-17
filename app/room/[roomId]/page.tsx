@@ -14,7 +14,7 @@ import { TelegramRedirect } from '@/app/components/ui/TelegramRedirect';
 export default function RoomPage() {
   const params = useParams();
   const roomId = params?.roomId as string;
-  const { isTelegramWebView } = useTelegramDetection();
+  const { isTelegram } = useTelegramDetection();
 
   const { stream: localStream, isMuted, isVideoOff, toggleMute, toggleVideo, error: mediaError } = useMediaStream();
 
@@ -47,7 +47,7 @@ export default function RoomPage() {
     navigateLeave();
   };
 
-  if (isTelegramWebView) {
+  if (isTelegram) {
     return <TelegramRedirect />;
   }
 
