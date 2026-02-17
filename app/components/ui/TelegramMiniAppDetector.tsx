@@ -10,6 +10,7 @@ interface TelegramMiniAppDetectorProps {
 
 export const TelegramMiniAppDetector = ({ onDetectionComplete }: TelegramMiniAppDetectorProps) => {
   const [status, setStatus] = useState<'checking' | 'telegram' | 'browser'>('checking');
+  console.log('TelegramMiniAppDetector activated');
 
   useEffect(() => {
     let mounted = true;
