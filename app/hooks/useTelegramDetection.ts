@@ -18,19 +18,36 @@ export const useTelegramDetection = () => {
     }
 
     const userAgent = navigator.userAgent;
+    // debug log
+    console.log('userAgent: ', userAgent);
 
     // typesafe ckeck for TelegramWebviewProxy and TelegramWebApp
     const hasTelegramProxy = typeof window.TelegramWebviewProxy !== 'undefined' && window.TelegramWebviewProxy !== null;
     const hasTelegramWebApp = typeof window.Telegram?.WebApp !== 'undefined';
+    // debug logs
+    console.log('hasTelegramProxy: ', hasTelegramProxy);
+    console.log('hasTelegramWebApp: ', hasTelegramWebApp);
+
+    const telegramWindow = typeof window.Telegram !== 'undefined';
+    console.log('telegramWindow: ', telegramWindow);
 
     // check if the app is open in Telegram
     const isTelegram =
-      userAgent.includes('Telegram') || userAgent.includes('TelegramBot') || hasTelegramProxy || hasTelegramWebApp;
+      userAgent.toLowerCase().includes('telegram') ||
+      userAgent.toLowerCase().includes('TelegramBot') ||
+      hasTelegramProxy ||
+      hasTelegramWebApp;
+    // debug log
+    console.log('isTelegram: ', isTelegram);
 
     // check platform type in Telegram
     const isTelegramIOS = isTelegram && /iPhone|iPad|iPod/i.test(userAgent);
     const isTelegramAndroid = isTelegram && /Android/i.test(userAgent);
     const isTelegramDesktop = isTelegram && !isTelegramIOS && !isTelegramAndroid;
+    // debug logs
+    console.log('isTelegramIOS: ', isTelegramIOS);
+    console.log('isTelegramAndroid: ', isTelegramAndroid);
+    console.log('isTelegramDesktop: ', isTelegramDesktop);
 
     // check WebView type
     let webViewType = null;
@@ -54,22 +71,17 @@ export const useTelegramDetection = () => {
     const versionMatch = userAgent.match(/Telegram\/([\d.]+)/);
     const telegramVersion = versionMatch ? versionMatch[1] : null;
 
-    // deb log
-    if (
-      // process.env.NODE_ENV === 'development' &&
-      isTelegram
-    ) {
-      console.log('Telegram detected:', {
-        isTelegramIOS,
-        isTelegramAndroid,
-        isTelegramDesktop,
-        webViewType,
-        telegramVersion,
-        hasProxy: hasTelegramProxy,
-        hasWebApp: hasTelegramWebApp,
-        userAgent,
-      });
-    }
+    // debug log
+    console.log('Telegram detected:', {
+      isTelegramIOS,
+      isTelegramAndroid,
+      isTelegramDesktop,
+      webViewType,
+      telegramVersion,
+      hasProxy: hasTelegramProxy,
+      hasWebApp: hasTelegramWebApp,
+      userAgent,
+    });
 
     return {
       isTelegram,
