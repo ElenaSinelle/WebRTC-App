@@ -10,9 +10,13 @@ interface TelegramMiniAppDetectorProps {
 
 export const TelegramMiniAppDetector = ({ onDetectionComplete }: TelegramMiniAppDetectorProps) => {
   const [status, setStatus] = useState<'checking' | 'telegram' | 'browser'>('checking');
-  console.log('TelegramMiniAppDetector activated');
+  console.log(' [TelegramDetector] COMPONENT MOUNTED');
+  console.log(' [TelegramDetector] Current status:', status);
+  console.log(' [TelegramDetector] URL:', window.location.href);
+  console.log(' [TelegramDetector] UserAgent:', navigator.userAgent);
 
   useEffect(() => {
+    console.log('[TelegramDetector] useEffect started');
     let mounted = true;
     let timeoutId: NodeJS.Timeout;
 
@@ -20,7 +24,7 @@ export const TelegramMiniAppDetector = ({ onDetectionComplete }: TelegramMiniApp
       try {
         // SDK init
         const isTelegram = await isTMA('complete', { timeout: 100 });
-
+        console.log(' [TelegramDetector] isTMA result:', isTelegram);
         // if Telegram Mini App detected, isTelegram will be true
 
         if (mounted) {
@@ -31,11 +35,14 @@ export const TelegramMiniAppDetector = ({ onDetectionComplete }: TelegramMiniApp
             // timeout for check
             timeoutId = setTimeout(() => {
               if (mounted) {
+                console.log('[TelegramDetector] Timeout finished, setting browser status');
+
                 setStatus('browser');
                 console.log('Not in Telegram Mini App');
               }
             }, 100);
           }
+          console.log('[TelegramDetector] Calling onDetectionComplete');
           onDetectionComplete();
         }
       } catch (error) {
@@ -50,22 +57,28 @@ export const TelegramMiniAppDetector = ({ onDetectionComplete }: TelegramMiniApp
     detectTelegram();
 
     return () => {
+      console.log(' [TelegramDetector] CLEANUP');
       mounted = false;
       clearTimeout(timeoutId);
     };
   }, [onDetectionComplete]);
 
+  console.log(' [TelegramDetector] RENDER - status:', status);
+
   const handleOpenInBrowser = () => {
     // use standard Web API to open a link
+    console.log(' [TelegramDetector] Open in Browser clicked');
     window.open(window.location.href, '_blank');
   };
 
   const handleShareLink = () => {
+    console.log(' [TelegramDetector] Share Link clicked');
     const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}`;
     window.open(shareUrl, '_blank');
   };
 
   if (status === 'checking') {
+    console.log('[TelegramDetector] Rendering CHECKING state');
     return (
       <div className="fixed inset-0 bg-background-primary z-50 flex items-center justify-center">
         <div className="text-text-secondary">Checking environment...</div>
@@ -74,9 +87,10 @@ export const TelegramMiniAppDetector = ({ onDetectionComplete }: TelegramMiniApp
   }
 
   if (status === 'browser') {
+    console.log('[TelegramDetector] Rendering NULL (browser mode)');
     return null;
   }
-
+  console.log('[TelegramDetector] Rendering TELEGRAM UI');
   return (
     <div className="fixed inset-0 bg-background-primary z-50 flex items-center justify-center p-4">
       <div className="bg-background-card rounded-md shadow-xl max-w-md w-full border border-border-secondary p-8 text-center">

@@ -39,10 +39,11 @@ export default function RoomPage() {
     closeEndConfirmation,
   } = useRoom(roomId);
 
-  console.log('pre TelegramMiniAppDetector activation');
+  console.log('[RoomPage] RENDER - isTelegramChecked:', isTelegramChecked);
+  console.log('[RoomPage] roomId:', roomId);
 
   if (!isTelegramChecked) {
-    console.log('start TelegramMiniAppDetector activation');
+    console.log('[RoomPage] start TelegramMiniAppDetector component render');
     return <TelegramMiniAppDetector onDetectionComplete={() => setIsTelegramChecked(true)} />;
   }
 
