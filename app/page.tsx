@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from './components/ui/Button';
-import { TgHintLoader } from '@/app/components/ui/telegramClient';
+import { TgHintLoader } from './components/ui/TelegramClient';
 
 export default function HomePage() {
   const router = useRouter();
