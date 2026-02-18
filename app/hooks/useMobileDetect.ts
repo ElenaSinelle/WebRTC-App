@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 
 export const useMobileDetect = () => {
   const deviceInfo = useMemo(() => {
+    const isDev = process.env.NODE_ENV === 'development';
     if (typeof window === 'undefined') {
       return { isMobile: false, isIOS: false, isAndroid: false, browser: '' };
     }
@@ -26,7 +27,7 @@ export const useMobileDetect = () => {
     if (isIOS) {
       const match = userAgent.match(/OS (\d+)_(\d+)/);
       const version = match ? `${match[1]}.${match[2]}` : 'unknown';
-      console.log('iOS version:', version);
+      if (isDev) console.log('iOS version:', version);
     }
 
     return { isMobile, isIOS, isAndroid, browser };

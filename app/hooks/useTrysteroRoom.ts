@@ -5,7 +5,6 @@ import type { Room } from 'trystero';
 import { createTrysteroRoom } from '../lib/trystero-config';
 import type { Participant } from '../lib/types';
 import { useMobileDetect } from './useMobileDetect';
-// import { useTelegramDetection } from './useTelegramDetection';
 
 export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null) => {
   const [participants, setParticipants] = useState<Map<string, Participant>>(new Map());
@@ -20,7 +19,8 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
   const timeoutsRef = useRef<Set<NodeJS.Timeout>>(new Set());
 
   const { isAndroid, isIOS } = useMobileDetect();
-  // const { isTelegramWebView } = useTelegramDetection();
+
+  const isDev = process.env.NODE_ENV === 'development';
 
   const safeSetTimeout = useCallback((callback: () => void, delay: number) => {
     const timeout = setTimeout(() => {
@@ -60,10 +60,10 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
             if (targetPeerId) {
               room.addStream(localStream, targetPeerId);
               peerStreamsSent.current.add(targetPeerId);
-              console.log(`Stream sent to peer: ${targetPeerId}`);
+              if (isDev) console.log(`Stream sent to peer: ${targetPeerId}`);
             } else {
               room.addStream(localStream);
-              console.log('Stream broadcast to all peers');
+              if (isDev) console.log('Stream broadcast to all peers');
             }
           } catch (error) {
             console.error('Error sending stream:', error);
@@ -71,16 +71,6 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
         };
 
         // initialization depending on platform
-        // if (isTelegramWebView) {
-        //   console.log('Telegram WebView detected ');
-
-        //   // Timeout for initialization in Telegram
-        //   safeSetTimeout(() => {
-        //     if (roomRef.current && localStream && mounted) {
-        //       sendStreamToPeer();
-        //     }
-        //   }, 1000);
-        // } else
         if (isAndroid) {
           // Timeout for initialization on Android
           safeSetTimeout(() => {
@@ -108,7 +98,7 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
                 const audioContext = new AudioContextClass();
                 if (audioContext.state === 'suspended') {
                   audioContext.resume().then(() => {
-                    console.log('AudioContext resumed for iOS');
+                    if (isDev) console.log('AudioContext resumed for iOS');
                   });
                 }
               }
@@ -121,11 +111,9 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
 
         // listen to new participants
         room.onPeerJoin((peerId: string) => {
-          console.log('Peer joined:', peerId);
+          if (isDev) console.log('Peer joined:', peerId);
 
-          const delay =
-            // isTelegramWebView ? 1000 :
-            isIOS ? 200 : 0;
+          const delay = isIOS ? 200 : 0;
 
           // send stream to a new participant
           if (delay > 0) {
@@ -143,16 +131,12 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
 
         // listen video-streams from other participants
         room.onPeerStream((stream: MediaStream, peerId: string) => {
-          console.log('Received stream from:', peerId);
+          if (isDev) console.log('Received stream from:', peerId);
 
           if (!mounted) return;
 
           // activate audio for iOS
-          if (
-            isIOS
-            //  ||
-            // isTelegramWebView
-          ) {
+          if (isIOS) {
             stream.getAudioTracks().forEach((track) => {
               track.enabled = true;
             });
@@ -174,7 +158,7 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
 
         // listen participants leave
         room.onPeerLeave((peerId: string) => {
-          console.log('Peer left:', peerId);
+          if (isDev) console.log('Peer left:', peerId);
 
           setParticipants((prev) => {
             const newMap = new Map(prev);
@@ -188,13 +172,13 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
 
         setConnectionStatus('connected');
         setRetryCount(0);
-        console.log('Room initialized successfully');
+        if (isDev) console.log('Room initialized successfully');
       } catch (error) {
         console.error('Failed to initialize Trystero room:', error);
 
         // auto reconnect on error
         if (retryCount < 3 && mounted) {
-          console.log(`Retrying connection (${retryCount + 1}/3)...`);
+          if (isDev) console.log(`Retrying connection (${retryCount + 1}/3)...`);
           setRetryCount((prev) => prev + 1);
 
           reconnectTimeout = safeSetTimeout(
@@ -232,7 +216,7 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
       const currentPeerStreams = peerStreamsSent.current;
 
       if (currentRoom) {
-        console.log('Leaving room...');
+        if (isDev) console.log('Leaving room...');
         currentRoom.leave();
       }
 
@@ -241,18 +225,10 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
 
       setParticipants(new Map());
     };
-  }, [
-    roomId,
-    localStream,
-    isAndroid,
-    isIOS,
-    // isTelegramWebView,
-    retryCount,
-    safeSetTimeout,
-  ]);
+  }, [roomId, localStream, isAndroid, isIOS, retryCount, safeSetTimeout]);
 
   const leaveRoom = useCallback(() => {
-    console.log('Leaving room...');
+    if (isDev) console.log('Leaving room...');
     const currentRoom = roomRef.current;
     const currentPeerStreams = peerStreamsSent.current;
 

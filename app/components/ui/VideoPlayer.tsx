@@ -22,6 +22,7 @@ export const VideoPlayer = ({
   const { isIOS } = useMobileDetect();
 
   useEffect(() => {
+    const isDev = process.env.NODE_ENV === 'development';
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream;
 
@@ -30,7 +31,7 @@ export const VideoPlayer = ({
         const playVideo = () => {
           if (videoRef.current) {
             videoRef.current.play().catch((e) => {
-              console.log('iOS play error (will retry):', e);
+              if (isDev) console.log('iOS play error (will retry):', e);
               // retry after error
               setTimeout(playVideo, 500);
             });
