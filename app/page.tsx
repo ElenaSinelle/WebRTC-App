@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from './components/ui/Button';
-import 'tg-hint/dist/tg-hint.min.js';
 
 export default function HomePage() {
   const router = useRouter();
