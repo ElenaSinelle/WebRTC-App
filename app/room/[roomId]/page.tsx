@@ -81,6 +81,7 @@ export default function RoomPage() {
 
   return (
     <div className="w-full max-w-7xl mx-auto p-4 flex flex-col gap-4">
+      <TgHintLoader />
       <div className="bg-background-card rounded-md shadow-lg border border-border-secondary p-6">
         <RoomInfo isCreator={isCreator} participantsCount={participants.size} connectionStatus={connectionStatus} />
       </div>
