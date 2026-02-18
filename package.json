@@ -9,10 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@tma.js/sdk": "^3.1.6",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "tg-hint": "^0.0.2",
     "trystero": "^0.22.0"
   },
   "devDependencies": {

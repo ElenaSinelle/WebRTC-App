@@ -8,39 +8,23 @@ import { ParticipantsGrid } from '@/app/components/conference/ParticipantsGrid';
 import { ConferenceControls } from '@/app/components/conference/ConferenceControls';
 import { RoomInfo } from '@/app/components/conference/RoomInfo';
 import { Button } from '@/app/components/ui/Button';
-import { useEffect, useState } from 'react';
-import { TelegramMiniAppDetector } from '@/app/components/ui/TelegramMiniAppDetector';
+// import { useEffect, useState } from 'react';
+// import { TelegramMiniAppDetector } from '@/app/components/ui/TelegramMiniAppDetector';
 // import { useTelegramDetection } from '@/app/hooks/useTelegramDetection';
 // import { TelegramRedirect } from '@/app/components/ui/TelegramRedirect';
+import 'tg-hint/dist/tg-hint.min.js';
 
 export default function RoomPage() {
   const params = useParams();
   const roomId = params?.roomId as string;
 
   console.log(' [RoomPage] RENDER START');
-  console.log(' [RoomPage] window.location.href:', typeof window !== 'undefined' ? window.location.href : 'server');
-  console.log(' [RoomPage] document.referrer:', typeof window !== 'undefined' ? document.referrer : 'server');
 
   // const [isTelegramChecked, setIsTelegramChecked] = useState(false);
-  const [isTelegramChecked, setIsTelegramChecked] = useState(() => {
-    console.log('[RoomPage] useState INITIALIZER running');
-    return false;
-  });
-  // const { isTelegram } = useTelegramDetection();
-
-  useEffect(() => {
-    console.log(' [RoomPage] useEffect - component mounted');
-    console.log(' [RoomPage] isTelegramChecked AFTER MOUNT:', isTelegramChecked);
-
-    const timer = setTimeout(() => {
-      console.log(' [RoomPage] FORCE RESET');
-      setIsTelegramChecked(false);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  console.log(' [RoomPage] isTelegramChecked BEFORE RENDER:', isTelegramChecked);
+  // const [isTelegramChecked, setIsTelegramChecked] = useState(() => {
+  //   console.log('[RoomPage] useState INITIALIZER running');
+  //   return false;
+  // });
 
   const { stream: localStream, isMuted, isVideoOff, toggleMute, toggleVideo, error: mediaError } = useMediaStream();
 
@@ -62,13 +46,12 @@ export default function RoomPage() {
     closeEndConfirmation,
   } = useRoom(roomId);
 
-  console.log('[RoomPage] RENDER - isTelegramChecked:', isTelegramChecked);
-  console.log('[RoomPage] roomId:', roomId);
+  // console.log('[RoomPage] roomId:', roomId);
 
-  if (!isTelegramChecked) {
-    console.log('[RoomPage] start TelegramMiniAppDetector component render');
-    return <TelegramMiniAppDetector onDetectionComplete={() => setIsTelegramChecked(true)} />;
-  }
+  // if (!isTelegramChecked) {
+  //   console.log('[RoomPage] start TelegramMiniAppDetector component render');
+  //   return <TelegramMiniAppDetector onDetectionComplete={() => setIsTelegramChecked(true)} />;
+  // }
 
   const handleLeave = () => {
     leavePeerRoom();
@@ -80,10 +63,6 @@ export default function RoomPage() {
     closeEndConfirmation();
     navigateLeave();
   };
-
-  // if (isTelegram) {
-  //   return <TelegramRedirect />;
-  // }
 
   if (mediaError) {
     return (
