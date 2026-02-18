@@ -8,7 +8,7 @@ import { ParticipantsGrid } from '@/app/components/conference/ParticipantsGrid';
 import { ConferenceControls } from '@/app/components/conference/ConferenceControls';
 import { RoomInfo } from '@/app/components/conference/RoomInfo';
 import { Button } from '@/app/components/ui/Button';
-import { TgHintLoader } from '@/app/components/ui/TelegramClient';
+import { TgHintLoader } from '@/app/components/ui/TgHintLoader';
 
 export default function RoomPage() {
   const params = useParams();
