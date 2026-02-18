@@ -5,12 +5,10 @@ import { Button } from '../ui/Button';
 interface ConferenceControlsProps {
   isMuted: boolean;
   isVideoOff: boolean;
-  isCreator: boolean;
   onToggleMute: () => void;
   onToggleVideo: () => void;
   onCopyLink: () => void;
   onLeave: () => void;
-  onEndConference: () => void;
   copiedLink: boolean;
   onCopyRoomId: () => void;
   copiedId: boolean;
@@ -19,12 +17,10 @@ interface ConferenceControlsProps {
 export const ConferenceControls = ({
   isMuted,
   isVideoOff,
-  isCreator,
   onToggleMute,
   onToggleVideo,
   onCopyLink,
   onLeave,
-  onEndConference,
   copiedLink,
   onCopyRoomId,
   copiedId,
@@ -55,15 +51,9 @@ export const ConferenceControls = ({
 
       {/* Session controls */}
       <div className="flex flex-wrap justify-center gap-3 pt-2 border-t border-border-secondary">
-        <Button onClick={onLeave} variant="secondary" size="md">
+        <Button onClick={onLeave} variant="danger" size="md">
           Leave room
         </Button>
-
-        {isCreator && (
-          <Button onClick={onEndConference} variant="danger" size="md">
-            End conference
-          </Button>
-        )}
       </div>
     </div>
   );

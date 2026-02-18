@@ -29,7 +29,7 @@ export const useRoom = (roomId: string) => {
     }
   }, [roomId]);
 
-  const leaveRoom = useCallback(() => {
+  const navigateLeave = useCallback(() => {
     router.push('/');
   }, [router]);
 
@@ -45,7 +45,7 @@ export const useRoom = (roomId: string) => {
     copied,
     copyRoomLink,
     copyRoomId,
-    leaveRoom,
+    navigateLeave,
     showEndConfirmation,
     openEndConfirmation,
     closeEndConfirmation,

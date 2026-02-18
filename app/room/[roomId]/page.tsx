@@ -16,32 +16,20 @@ export default function RoomPage() {
 
   const { stream: localStream, isMuted, isVideoOff, toggleMute, toggleVideo, error: mediaError } = useMediaStream();
 
-  const {
-    participants,
-    isCreator,
-    connectionStatus,
-    endConference,
-    leaveRoom: leavePeerRoom,
-  } = useTrysteroRoom(roomId, localStream);
+  const { participants, connectionStatus, leaveRoom } = useTrysteroRoom(roomId, localStream);
 
   const {
     copied,
     copyRoomLink,
     copyRoomId,
-    leaveRoom: navigateLeave,
+    navigateLeave,
     showEndConfirmation,
     openEndConfirmation,
     closeEndConfirmation,
   } = useRoom(roomId);
 
   const handleLeave = () => {
-    leavePeerRoom();
-    navigateLeave();
-  };
-
-  const handleEndConference = () => {
-    endConference();
-    closeEndConfirmation();
+    leaveRoom();
     navigateLeave();
   };
 
@@ -63,7 +51,7 @@ export default function RoomPage() {
     <div className="w-full max-w-7xl mx-auto p-4 flex flex-col gap-4">
       <TgHintLoader />
       <div className="bg-background-card rounded-md shadow-lg border border-border-secondary p-6">
-        <RoomInfo isCreator={isCreator} participantsCount={participants.size} connectionStatus={connectionStatus} />
+        <RoomInfo participantsCount={participants.size} connectionStatus={connectionStatus} />
       </div>
 
       <div className="bg-background-card rounded-md shadow-lg border border-border-secondary p-6">
@@ -78,12 +66,10 @@ export default function RoomPage() {
         <ConferenceControls
           isMuted={isMuted}
           isVideoOff={isVideoOff}
-          isCreator={isCreator}
           onToggleMute={toggleMute}
           onToggleVideo={toggleVideo}
           onCopyLink={copyRoomLink}
-          onLeave={handleLeave}
-          onEndConference={openEndConfirmation}
+          onLeave={openEndConfirmation}
           copiedLink={copied === 'link'}
           onCopyRoomId={copyRoomId}
           copiedId={copied === 'id'}
@@ -96,13 +82,15 @@ export default function RoomPage() {
             <div className="p-6">
               <h3 className="text-xl font-semibold text-text-primary mb-2">End conference?</h3>
               <p className="text-text-secondary mb-6">
-                All participants will be disconnected. This action cannot be undone.
+                {participants.size === 0
+                  ? 'You are the only participant. The room will be closed.'
+                  : 'Are you sure you want to leave the conference?'}
               </p>
               <div className="flex gap-3 justify-end">
                 <Button variant="secondary" onClick={closeEndConfirmation}>
                   Cancel
                 </Button>
-                <Button variant="danger" onClick={handleEndConference}>
+                <Button variant="danger" onClick={handleLeave}>
                   End conference
                 </Button>
               </div>

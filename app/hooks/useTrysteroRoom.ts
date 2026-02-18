@@ -242,15 +242,10 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
     currentPeerStreams.clear();
   }, []);
 
-  // first participant becomes creator
-  const isCreator = participants.size === 0 && connectionStatus === 'connected';
-
   return {
     myPeerId,
     participants,
-    isCreator,
     connectionStatus,
     leaveRoom,
-    endConference: leaveRoom,
   };
 };
