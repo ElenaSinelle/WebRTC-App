@@ -52,10 +52,10 @@ export const TgHintLoader = (): null => {
                           <p style="margin:8px 0 0 12px;font-size:13px;color:var(--text-secondary);">${langData.disable_and}</p>
                         </details>
                         <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:20px;">
-                          <button id="tgOk" style="background-color:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-secondary);border-radius:6px;padding:8px 16px;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s ease;font-family:inherit;">
+                          <button id="tgOk" style="background-color:transparent;color:var(--text-primary);border:1px solid var(--text-primary);border-radius:6px;padding:8px 16px;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s ease;font-family:inherit;box-shadow:none;">
                             ${langData.cancel}
                           </button>
-                          <button id="tgOpenBrowser" style="background-color:var(--danger);color:white;border:none;border-radius:6px;padding:8px 16px;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s ease;font-family:inherit;">
+                          <button id="tgOpenBrowser" style="background-color:var(--bg-secondary);color:var(--text-primary);border:none;border-radius:6px;padding:8px 16px;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s ease;font-family:inherit;box-shadow:none;">
                             ${langData.ok}
                           </button>
                         </div>
