@@ -12,7 +12,7 @@ export const TgHintLoader = () => {
         if (isDev) console.log(' tg-hint loaded');
       }}
       onError={(error) => {
-        console.error('❌ Failed to load tg-hint:', error);
+        console.error(' Failed to load tg-hint:', error);
       }}
     />
   );
