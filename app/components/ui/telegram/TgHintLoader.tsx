@@ -25,7 +25,10 @@ export const TgHintLoader = (): null => {
 
       // detect browser language
       const browserLang = (navigator.language || '').slice(0, 2).toLowerCase();
-      const defaultLang: LanguageCode = translations[browserLang] ? (browserLang as LanguageCode) : 'en';
+      const validLanguages: LanguageCode[] = Object.keys(translations) as LanguageCode[];
+      const defaultLang: LanguageCode = validLanguages.includes(browserLang as LanguageCode)
+        ? (browserLang as LanguageCode)
+        : 'en';
 
       let overlayElement: HTMLElement | null = null;
 
@@ -33,28 +36,56 @@ export const TgHintLoader = (): null => {
       const createOverlayHTML = (langData: Translation): string => {
         const dirAttribute = langData.dir ? `dir="${langData.dir}"` : '';
 
+        // return `
+        //   <div id="tgHint" style="position:fixed;inset:0;background:#0006;
+        //        backdrop-filter:blur(5px);display:flex;justify-content:center;
+        //        align-items:center;z-index:2147483647;font:16px/1.4 system-ui;">
+        //     <div style="background:#fff;border-radius:14px;padding:26px 24px;max-width:360px;width:90%;" ${dirAttribute}>
+        //       <select id="tgLang" style="float:right;margin:-6px 0 6px 0;">
+        //         ${Object.keys(translations)
+        //           .map((lang) => `<option value="${lang}">${lang.toUpperCase()}</option>`)
+        //           .join('')}
+        //       </select>
+        //       <h3 style="margin:0 0 12px">${langData.title}</h3>
+        //       <p>${langData.body}</p>
+        //       <details style="margin:12px 0">
+        //         <summary>${langData.disable}</summary>
+        //         <p style="margin:6px 0 0">${langData.disable_ios}</p>
+        //         <p style="margin:6px 0 0">${langData.disable_and}</p>
+        //       </details>
+        //       <button id="tgOk" style="margin-top:14px;padding:6px 12px;border:none;
+        //           background:#0088cc;color:#fff;border-radius:6px;cursor:pointer">${langData.ok}</button>
+        //     </div>
+        //   </div>
+        // `;
         return `
-          <div id="tgHint" style="position:fixed;inset:0;background:#0006;
-               backdrop-filter:blur(5px);display:flex;justify-content:center;
-               align-items:center;z-index:2147483647;font:16px/1.4 system-ui;">
-            <div style="background:#fff;border-radius:14px;padding:26px 24px;max-width:360px;width:90%;" ${dirAttribute}>
-              <select id="tgLang" style="float:right;margin:-6px 0 6px 0;">
-                ${Object.keys(translations)
-                  .map((lang) => `<option value="${lang}">${lang.toUpperCase()}</option>`)
-                  .join('')}
-              </select>
-              <h3 style="margin:0 0 12px">${langData.title}</h3>
-              <p>${langData.body}</p>
-              <details style="margin:12px 0">
-                <summary>${langData.disable}</summary>
-                <p style="margin:6px 0 0">${langData.disable_ios}</p>
-                <p style="margin:6px 0 0">${langData.disable_and}</p>
-              </details>
-              <button id="tgOk" style="margin-top:14px;padding:6px 12px;border:none;
-                  background:#0088cc;color:#fff;border-radius:6px;cursor:pointer">${langData.ok}</button>
-            </div>
-          </div>
-        `;
+                  <div id="tgHint" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:flex;justify-content:center;align-items:center;z-index:2147483647;">
+                    <div style="background-color:var(--bg-card);border-radius:6px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1),0 8px 10px -6px rgba(0,0,0,0.1);max-width:320px;width:90%;border:1px solid var(--border-secondary);" ${dirAttribute}>
+                      <div style="padding:24px;">
+                        <select id="tgLang" style="float:right;margin:-6px 0 8px 0;background-color:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-secondary);border-radius:4px;padding:4px 8px;font-size:12px;">
+                          ${Object.keys(translations)
+                            .map((lang) => `<option value="${lang}">${lang.toUpperCase()}</option>`)
+                            .join('')}
+                        </select>
+                        <h3 style="margin:0 0 8px 0;font-size:20px;font-weight:600;color:var(--text-primary);">${langData.title}</h3>
+                        <p style="color:var(--text-secondary);margin-bottom:16px;line-height:1.5;">${langData.body}</p>
+                        <details style="margin:16px 0;color:var(--text-secondary);">
+                          <summary style="cursor:pointer;font-weight:500;color:var(--text-primary);">${langData.disable}</summary>
+                          <p style="margin:8px 0 0 0;padding-left:8px;font-size:14px;">${langData.disable_ios}</p>
+                          <p style="margin:8px 0 0 0;padding-left:8px;font-size:14px;">${langData.disable_and}</p>
+                        </details>
+                        <div style="display:flex;gap:12px;justify-content:flex-end;">
+                          <button id="tgOk" style="background-color:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-secondary);border-radius:6px;padding:8px 16px;font-size:14px;font-weight:500;cursor:pointer;transition:background-color 0.2s;">
+                            ${langData.cancel}
+                          </button>
+                          <button id="tgOpenBrowser" style="background-color:var(--danger);color:white;border:none;border-radius:6px;padding:8px 16px;font-size:14px;font-weight:500;cursor:pointer;transition:background-color 0.2s;">
+                            ${langData.ok}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                `;
       };
 
       // hint function
@@ -82,12 +113,29 @@ export const TgHintLoader = (): null => {
           };
         }
 
-        const okButton = overlayElement.querySelector<HTMLButtonElement>('#tgOk');
-        if (okButton) {
-          okButton.onclick = () => {
+        // const okButton = overlayElement.querySelector<HTMLButtonElement>('#tgOk');
+        // if (okButton) {
+        //   okButton.onclick = () => {
+        //     overlayElement?.remove();
+        //     overlayElement = null;
+        //     if (isDev) console.log(' tg-hint closed');
+        //   };
+        // }
+
+        const cancelButton = overlayElement.querySelector<HTMLButtonElement>('#tgOk');
+        if (cancelButton) {
+          cancelButton.onclick = () => {
             overlayElement?.remove();
             overlayElement = null;
-            if (isDev) console.log(' tg-hint closed');
+            if (isDev) console.log('tg-hint closed');
+          };
+        }
+
+        const openBrowserButton = overlayElement.querySelector<HTMLButtonElement>('#tgOpenBrowser');
+        if (openBrowserButton) {
+          openBrowserButton.onclick = () => {
+            window.location.href = window.location.href.replace(/^https?:\/\//, '');
+            if (isDev) console.log('Attempting to open in browser');
           };
         }
 
@@ -108,10 +156,10 @@ export const TgHintLoader = (): null => {
       const existingHint = document.getElementById('tgHint');
       if (existingHint) {
         existingHint.remove();
-        if (isDev) console.log('🧹 tg-hint cleaned up');
+        if (isDev) console.log('tg-hint cleaned up');
       }
     };
-  }, []);
+  }, [isDev]);
 
   return null;
 };
