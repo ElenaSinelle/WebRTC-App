@@ -13,9 +13,23 @@ export const RELAYS = [
   'wss://nostr.bitcoiner.social',
 ];
 
+export const TURN_CONFIG = [
+  {
+    urls: [
+      'turn:openrelayproject.metered.ca:80?transport=tcp',
+      'turn:openrelayproject.metered.ca:443?transport=tcp',
+      'turn:openrelayproject.website:80?transport=tcp',
+      'turn:openrelayproject.website:443?transport=tcp',
+    ],
+    username: 'openrelayproject',
+    credential: 'openrelayproject',
+  },
+];
+
 export const roomConfig = {
   appId: APP_ID,
   relays: RELAYS,
+  turnConfig: TURN_CONFIG,
 };
 
 export const createTrysteroRoom = (roomId: string) => {
