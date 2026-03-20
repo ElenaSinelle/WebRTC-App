@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useMediaStream } from '@/app/hooks/useMediaStream';
 import { useTrysteroRoom } from '@/app/hooks/useTrysteroRoom';
 import { useRoom } from '@/app/hooks/useRoom';
@@ -10,9 +10,9 @@ import { RoomInfo } from '@/app/components/conference/RoomInfo';
 import { Button } from '@/app/components/ui/Button';
 import { TgHintLoader } from '@/app/components/ui/telegram/TgHintLoader';
 
-export default function RoomPage() {
-  const params = useParams();
-  const roomId = params?.roomId as string;
+export default function RoomContent() {
+  const searchParams = useSearchParams();
+  const roomId = searchParams.get('id');
 
   const {
     stream: localStream,
@@ -24,7 +24,7 @@ export default function RoomPage() {
     retryAccess,
   } = useMediaStream();
 
-  const { participants, connectionStatus, leaveRoom } = useTrysteroRoom(roomId, localStream);
+  const { participants, connectionStatus, leaveRoom } = useTrysteroRoom(roomId || '', localStream);
 
   const {
     copied,
@@ -34,12 +34,22 @@ export default function RoomPage() {
     showEndConfirmation,
     openEndConfirmation,
     closeEndConfirmation,
-  } = useRoom(roomId);
+  } = useRoom(roomId || '');
 
   const handleLeave = () => {
     leaveRoom();
     navigateLeave();
   };
+
+  if (!roomId) {
+    return (
+      <div className="w-full max-w-7xl mx-auto p-6 text-center">
+        <div className="bg-status-danger/10 border border-status-danger/30 text-status-danger px-4 py-3 rounded-md">
+          <p>No room id</p>
+        </div>
+      </div>
+    );
+  }
 
   if (mediaError) {
     return (

@@ -10,13 +10,13 @@ export default function HomePage() {
 
   const createRoom = () => {
     const newRoomId = Math.random().toString(36).substring(2, 10);
-    router.push(`/room/${newRoomId}`);
+    router.push(`/room?id=${newRoomId}`);
   };
 
   const joinRoom = (e: React.SubmitEvent) => {
     e.preventDefault();
     if (roomId.trim()) {
-      router.push(`/room/${roomId.trim()}`);
+      router.push(`/room?id=${roomId.trim()}`);
     }
   };
 

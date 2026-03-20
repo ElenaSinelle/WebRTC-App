@@ -20,6 +20,7 @@ export const useRoom = (roomId: string) => {
   }, []);
 
   const copyRoomId = useCallback(async () => {
+    if (!roomId) return;
     try {
       await navigator.clipboard.writeText(roomId);
       setCopied('id');

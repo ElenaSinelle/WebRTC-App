@@ -32,7 +32,7 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
   }, []);
 
   useEffect(() => {
-    if (!localStream) {
+    if (!roomId || !localStream) {
       return;
     }
 
