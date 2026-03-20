@@ -3,6 +3,12 @@ import { joinRoom } from 'trystero/nostr';
 export const APP_ID = 'webrtc-app-es';
 
 export const RELAYS = [
+  'wss://prl.plus/',
+  'wss://adre.su/',
+  'wss://176.108.254.19/relay',
+  'wss://relay.edino.net/',
+  'wss://nostr.jerrynya.fun/',
+  'wss://ai.techunder.tech:56711/',
   'wss://relay.damus.io',
   'wss://nos.lol',
   'wss://relay.snort.social',
@@ -11,6 +17,9 @@ export const RELAYS = [
   'wss://relay.current.fyi',
   'wss://brb.io',
   'wss://nostr.bitcoiner.social',
+  'wss://relay.primal.net',
+  'wss://nostr.mom',
+  'wss://relay.nostr.band',
 ];
 
 export const TURN_CONFIG = [
