@@ -50,7 +50,7 @@ export const roomConfig = {
   relays: RELAYS,
   rtcConfig: {
     iceServers: [...TURN_CONFIG, { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun.relay.metered.ca:80' }],
-    iceTransportPolicy: 'relay' as RTCConfiguration['iceTransportPolicy'],
+    // iceTransportPolicy: 'relay' as RTCConfiguration['iceTransportPolicy'],
   },
 };
 
