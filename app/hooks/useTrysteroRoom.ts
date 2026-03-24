@@ -45,6 +45,19 @@ export const useTrysteroRoom = (roomId: string, localStream: MediaStream | null)
       try {
         // create room and connect to it
         const room = createTrysteroRoom(roomId);
+
+        //debug logs
+        Object.entries(room.getPeers()).forEach(([peerId, pc]) => {
+          pc.addEventListener('icegatheringstatechange', () => {
+            console.log(`[${peerId}] ICE gathering state: ${pc.iceGatheringState}`);
+            // 'new' → 'gathering' → 'complete'
+          });
+
+          pc.addEventListener('iceconnectionstatechange', () => {
+            console.log(`[${peerId}] ICE connection state: ${pc.iceConnectionState}`);
+            // 'new' → 'checking' → 'connected'/'failed'
+          });
+        });
         roomRef.current = room;
 
         // get id from trystero

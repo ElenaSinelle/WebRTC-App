@@ -26,30 +26,30 @@ export const TURN_CONFIG = [
   {
     urls: [
       'turn:standard.relay.metered.ca:80',
-      'turn:standard.relay.metered.ca:80?transport=tcp',
-      'turn:standard.relay.metered.ca:443',
-      'turns:standard.relay.metered.ca:443?transport=tcp',
+      // 'turn:standard.relay.metered.ca:80?transport=tcp',
+      // 'turn:standard.relay.metered.ca:443',
+      // 'turns:standard.relay.metered.ca:443?transport=tcp',
     ],
     username: 'd9bdd5e9d58e83af8d8da959',
     credential: '4+6G4gxznBUMNuJV',
   },
-  {
-    urls: [
-      'turn:global.relay.metered.ca:80',
-      'turn:global.relay.metered.ca:80?transport=tcp',
-      'turn:global.relay.metered.ca:443',
-      'turns:global.relay.metered.ca:443?transport=tcp',
-    ],
-    username: 'a134a600328159374d42be56',
-    credential: 'fIn2Nb1Syox77e/F',
-  },
+  // {
+  //   urls: [
+  //     'turn:global.relay.metered.ca:80',
+  //     'turn:global.relay.metered.ca:80?transport=tcp',
+  //     'turn:global.relay.metered.ca:443',
+  //     'turns:global.relay.metered.ca:443?transport=tcp',
+  //   ],
+  //   username: 'a134a600328159374d42be56',
+  //   credential: 'fIn2Nb1Syox77e/F',
+  // },
 ];
 
 export const roomConfig = {
   appId: APP_ID,
   relays: RELAYS,
   rtcConfig: {
-    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }],
+    iceServers: [...TURN_CONFIG, { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }],
   },
   //   iceCandidatePoolSize: 10,
   // },
