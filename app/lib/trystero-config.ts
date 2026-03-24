@@ -48,9 +48,9 @@ export const TURN_CONFIG = [
 export const roomConfig = {
   appId: APP_ID,
   relays: RELAYS,
-  // rtcConfig: {
-  //   iceServers: [...TURN_CONFIG, { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun.relay.metered.ca:80' }],
-
+  rtcConfig: {
+    iceServers: [...TURN_CONFIG, { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }],
+  },
   //   iceCandidatePoolSize: 10,
   // },
   // peerConfig: {
