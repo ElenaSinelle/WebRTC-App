@@ -33,12 +33,40 @@ export const TURN_CONFIG = [
     username: 'openrelayproject',
     credential: 'openrelayproject',
   },
+  {
+    urls: [
+      'turn:turn.cloudflare.com:3478?transport=udp',
+      'turn:turn.cloudflare.com:3478?transport=tcp',
+      'turn:turn.cloudflare.com:80?transport=tcp',
+      'turn:turn.cloudflare.com:443?transport=tcp',
+      'turns:turn.cloudflare.com:5349?transport=tcp',
+      'turns:turn.cloudflare.com:443?transport=tcp',
+    ],
+  },
+  {
+    urls: [
+      'turn:global.relay.metered.ca:80',
+      'turn:global.relay.metered.ca:80?transport=tcp',
+      'turn:global.relay.metered.ca:443',
+      'turns:global.relay.metered.ca:443?transport=tcp',
+    ],
+    username: 'a134a600328159374d42be56',
+    credential: 'fIn2Nb1Syox77e/F',
+  },
 ];
 
 export const roomConfig = {
   appId: APP_ID,
   relays: RELAYS,
-  turnConfig: TURN_CONFIG,
+  rtcConfig: {
+    iceServers: [
+      ...TURN_CONFIG,
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun.cloudflare.com:3478' },
+      { urls: 'stun:stun.relay.metered.ca:80' },
+    ],
+    iceTransportPolicy: 'relay' as RTCConfiguration['iceTransportPolicy'],
+  },
 };
 
 export const createTrysteroRoom = (roomId: string) => {
