@@ -48,16 +48,16 @@ export const TURN_CONFIG = [
 export const roomConfig = {
   appId: APP_ID,
   relays: RELAYS,
-  rtcConfig: {
-    iceServers: [...TURN_CONFIG, { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun.relay.metered.ca:80' }],
+  // rtcConfig: {
+  //   iceServers: [...TURN_CONFIG, { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun.relay.metered.ca:80' }],
 
-    iceCandidatePoolSize: 10,
-  },
-  peerConfig: {
-    iceConnectionStateChangeTimeout: 30000,
-    gatherTimeout: 20000,
-    iceTransportPolicy: 'all',
-  },
+  //   iceCandidatePoolSize: 10,
+  // },
+  // peerConfig: {
+  //   iceConnectionStateChangeTimeout: 30000,
+  //   gatherTimeout: 20000,
+  //   iceTransportPolicy: 'all',
+  // },
 };
 
 export const createTrysteroRoom = (roomId: string) => {
