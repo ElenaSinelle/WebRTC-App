@@ -9,8 +9,10 @@ import { ConferenceControls } from '@/app/components/conference/ConferenceContro
 import { RoomInfo } from '@/app/components/conference/RoomInfo';
 import { Button } from '@/app/components/ui/Button';
 import { TgHintLoader } from '@/app/components/ui/telegram/TgHintLoader';
+import { useRouter } from 'next/navigation';
 
 export default function RoomContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams.get('id');
 
@@ -46,6 +48,15 @@ export default function RoomContent() {
       <div className="w-full max-w-7xl mx-auto p-6 text-center">
         <div className="bg-status-danger/10 border border-status-danger/30 text-status-danger px-4 py-3 rounded-md">
           <p>No room id</p>
+          <Button
+            variant="primary"
+            onClick={() => {
+              router.push('/');
+            }}
+            className="mt-4"
+          >
+            Go to Homepage
+          </Button>
         </div>
       </div>
     );
