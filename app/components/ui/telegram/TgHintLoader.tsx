@@ -32,6 +32,11 @@ export const TgHintLoader = (): null => {
 
       let overlayElement: HTMLElement | null = null;
 
+      // detect room url
+      const getRoomUrl = (): string => {
+        return window.location.href;
+      };
+
       // create overlay html
       const createOverlayHTML = (langData: Translation): string => {
         const dirAttribute = langData.dir ? `dir="${langData.dir}"` : '';
@@ -102,10 +107,11 @@ export const TgHintLoader = (): null => {
         const openBrowserButton = overlayElement.querySelector<HTMLButtonElement>('#tgOpenBrowser');
         if (openBrowserButton) {
           openBrowserButton.onclick = () => {
-            const currentUrl = window.location.href;
+            const currentUrl = getRoomUrl();
 
             if (/Android/i.test(navigator.userAgent)) {
-              const intentUrl = `intent://${window.location.host}${window.location.pathname}#Intent;scheme=https;package=com.android.chrome;end`;
+              const fullUrl = currentUrl;
+              const intentUrl = `intent://${fullUrl.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.android.chrome;end`;
               window.location.href = intentUrl;
 
               setTimeout(() => {
