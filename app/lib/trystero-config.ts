@@ -51,7 +51,7 @@ export const roomConfig = {
   rtcConfig: {
     iceServers: [...TURN_CONFIG, { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }],
   },
-  //   iceCandidatePoolSize: 10,
+  iceCandidatePoolSize: 10,
   // },
   // peerConfig: {
   //   iceConnectionStateChangeTimeout: 30000,
