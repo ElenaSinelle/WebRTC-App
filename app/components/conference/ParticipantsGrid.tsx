@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { VideoPlayer } from '../ui/VideoPlayer';
 import type { Participant } from '@/app/lib/types';
 
@@ -10,7 +11,12 @@ interface ParticipantsGridProps {
   isVideoOff: boolean;
 }
 
-export const ParticipantsGrid = ({ localStream, participants, isMuted, isVideoOff }: ParticipantsGridProps) => {
+export const ParticipantsGrid = React.memo(function ParticipantsGrid({
+  localStream,
+  participants,
+  isMuted,
+  isVideoOff,
+}: ParticipantsGridProps) {
   const participantsArray = Array.from(participants.values());
 
   return (
@@ -22,4 +28,4 @@ export const ParticipantsGrid = ({ localStream, participants, isMuted, isVideoOf
       ))}
     </div>
   );
-};
+});

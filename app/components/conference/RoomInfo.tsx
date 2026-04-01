@@ -1,11 +1,13 @@
 'use client';
 
+import React from 'react';
+
 interface RoomInfoProps {
   participantsCount: number;
   connectionStatus: 'connecting' | 'connected' | 'disconnected';
 }
 
-export const RoomInfo = ({ participantsCount, connectionStatus }: RoomInfoProps) => {
+export const RoomInfo = React.memo(function RoomInfo({ participantsCount, connectionStatus }: RoomInfoProps) {
   const statusConfig = {
     connecting: {
       bg: 'bg-status-warning',
@@ -68,4 +70,4 @@ export const RoomInfo = ({ participantsCount, connectionStatus }: RoomInfoProps)
       )}
     </div>
   );
-};
+});
